@@ -43,7 +43,8 @@
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
-    .nav-logo { font-size: 20px; font-weight: 800; color: var(--green); letter-spacing: -0.5px; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; color: var(--green); letter-spacing: -0.5px; }
+    .nav-icon { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; }
     .nav-links { display: flex; align-items: center; gap: 28px; }
     .nav-links a { font-size: 14px; font-weight: 500; color: var(--muted); transition: color .15s; }
     .nav-links a:hover { color: var(--fg); }
@@ -65,6 +66,7 @@
       max-width: 780px;
       margin: 0 auto;
     }
+    .hero-wordmark { width: 260px; max-width: 80%; margin-bottom: 8px; }
     .hero-tag {
       display: inline-block;
       font-size: 11px;
@@ -290,7 +292,10 @@
 
   <!-- Nav -->
   <nav>
-    <div class="nav-logo">LockIn</div>
+    <div class="nav-logo">
+      <img src="images/icon.png" alt="LockIn icon" class="nav-icon" />
+      LockIn
+    </div>
     <div class="nav-links">
       <a href="#features">Features</a>
       <a href="#pro">Pro</a>
@@ -301,6 +306,7 @@
 
   <!-- Hero -->
   <div class="hero">
+    <img src="images/lockin_wordmark.png" alt="LockIn" class="hero-wordmark" />
     <div class="hero-tag">Available on Android · iOS coming soon</div>
     <h1>Lock in.<br /><span>Every single day.</span></h1>
     <p>A discipline system, not a habit tracker. Log your habits, build unbreakable streaks, and hold yourself accountable — no excuses, no skipping.</p>
