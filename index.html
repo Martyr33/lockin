@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LockIn — A discipline system, not a habit tracker.</title>
+  <meta name="description" content="LockIn holds you accountable every single day. Log your habits, protect your streaks, and track your progress with no excuses." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1311;
+      --card: #161d18;
+      --border: #1e2922;
+      --fg: #e5e7e6;
+      --muted: #8a9490;
+      --green: #22c55e;
+      --green-dim: #22c55e18;
+      --radius: 14px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Inter", sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 64px;
+      background: rgba(15,19,17,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-size: 20px; font-weight: 800; color: var(--green); letter-spacing: -0.5px; }
+    .nav-links { display: flex; align-items: center; gap: 28px; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--muted); transition: color .15s; }
+    .nav-links a:hover { color: var(--fg); }
+    .nav-cta {
+      background: var(--green);
+      color: #0f1311;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 8px;
+      transition: opacity .15s;
+    }
+    .nav-cta:hover { opacity: 0.88; }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 100px 24px 80px;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .hero-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--green);
+      background: var(--green-dim);
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 28px;
+    }
+    .hero h1 {
+      font-size: clamp(40px, 7vw, 72px);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -2px;
+      color: var(--fg);
+      margin-bottom: 22px;
+    }
+    .hero h1 span { color: var(--green); }
+    .hero p {
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+    .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green);
+      color: #0f1311;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 14px 28px;
+      border-radius: 10px;
+      transition: opacity .15s, transform .15s;
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      transition: border-color .15s, color .15s, transform .15s;
+    }
+    .btn-outline:hover { border-color: var(--muted); color: var(--fg); transform: translateY(-1px); }
+
+    /* ── Stats strip ── */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      max-width: 600px;
+      margin: 0 auto 100px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--card);
+    }
+    .stat-item {
+      flex: 1;
+      text-align: center;
+      padding: 22px 12px;
+      border-right: 1px solid var(--border);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-value { font-size: 28px; font-weight: 800; color: var(--green); }
+    .stat-label { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.5px; text-transform: uppercase; margin-top: 4px; }
+
+    /* ── Section ── */
+    section { max-width: 1080px; margin: 0 auto; padding: 0 24px 100px; }
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 500px;
+      line-height: 1.7;
+      margin-bottom: 48px;
+    }
+
+    /* ── Features grid ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      transition: border-color .2s, transform .2s;
+    }
+    .feature-card:hover { border-color: var(--green); transform: translateY(-2px); }
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--green-dim);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      font-size: 20px;
+    }
+    .feature-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .feature-body { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+    /* ── How it works ── */
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .step {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+    }
+    .step-num {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+    }
+    .step-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .step-body { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+    /* ── Pro section ── */
+    .pro-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    @media (max-width: 640px) {
+      .pro-card { grid-template-columns: 1fr; padding: 28px 24px; }
+    }
+    .pro-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--green);
+      background: var(--green-dim);
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+    }
+    .pro-title { font-size: 32px; font-weight: 800; letter-spacing: -1px; margin-bottom: 14px; }
+    .pro-sub { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 28px; }
+    .pro-price { font-size: 36px; font-weight: 800; color: var(--green); }
+    .pro-price span { font-size: 16px; font-weight: 500; color: var(--muted); }
+    .pro-note { font-size: 13px; color: var(--muted); margin-top: 4px; margin-bottom: 24px; }
+    .pro-features { display: flex; flex-direction: column; gap: 10px; }
+    .pro-feature-row { display: flex; align-items: center; gap: 10px; }
+    .pro-check { color: var(--green); font-size: 14px; flex-shrink: 0; }
+    .pro-feature-label { font-size: 14px; font-weight: 500; }
+
+    /* ── CTA section ── */
+    .cta-section {
+      text-align: center;
+      padding: 80px 24px 100px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .cta-section h2 { font-size: clamp(32px, 5vw, 52px); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 16px; }
+    .cta-section p { font-size: 16px; color: var(--muted); margin-bottom: 36px; }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: gap;
+      gap: 16px;
+    }
+    .footer-logo { font-size: 16px; font-weight: 800; color: var(--green); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .footer-links a:hover { color: var(--fg); }
+    .footer-copy { font-size: 13px; color: var(--muted); }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 20px; }
+      .nav-links { gap: 16px; }
+      .hero { padding: 72px 20px 56px; }
+      footer { flex-direction: column; align-items: flex-start; padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-logo">LockIn</div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#pro">Pro</a>
+      <a href="about/">About</a>
+      <a href="https://play.google.com/store/apps/details?id=com.lockin.app" class="nav-cta">Download</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-tag">Available on Android · iOS coming soon</div>
+    <h1>Lock in.<br /><span>Every single day.</span></h1>
+    <p>A discipline system, not a habit tracker. Log your habits, build unbreakable streaks, and hold yourself accountable — no excuses, no skipping.</p>
+    <div class="hero-btns">
+      <a href="https://play.google.com/store/apps/details?id=com.lockin.app" class="btn-primary">
+        ⬇ Download for Android
+      </a>
+      <a href="about/" class="btn-outline">
+        Learn more
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats" style="margin: 0 auto 100px; max-width: 560px;">
+    <div class="stat-item">
+      <div class="stat-value">3–10</div>
+      <div class="stat-label">Max habits</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">&lt; 10s</div>
+      <div class="stat-label">Daily logging</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">0</div>
+      <div class="stat-label">Excuses allowed</div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section id="features">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Everything you need.<br />Nothing you don't.</h2>
+    <p class="section-sub">LockIn keeps it simple. Log each habit daily, watch your streaks grow, and see exactly where you're winning and losing.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">✓</div>
+        <div class="feature-title">Daily logging</div>
+        <div class="feature-body">One tap — On Track or Missed. Log every habit in under 10 seconds. No lengthy check-ins, no gamified nonsense.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Streak tracking</div>
+        <div class="feature-body">Your streak resets to zero when you miss a day. Simple pressure, real accountability. Watch your consistency compound over time.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Heatmap history</div>
+        <div class="feature-body">A month-at-a-glance heatmap for every habit. See your patterns clearly and tap any day to edit your log.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">☁</div>
+        <div class="feature-title">Cloud sync</div>
+        <div class="feature-body">Your data syncs privately across devices using Firebase. No account required — sign-in is anonymous and automatic.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <div class="feature-title">Home screen widget</div>
+        <div class="feature-body">Log habits directly from your Android home screen widget. No need to open the app — one tap from anywhere.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⌚</div>
+        <div class="feature-title">WearOS support</div>
+        <div class="feature-body">Log from your wrist with the LockIn WearOS app. Your watch syncs with your phone in real time.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section>
+    <div class="section-label">How it works</div>
+    <h2 class="section-title">Three steps.<br />One system.</h2>
+    <p class="section-sub">LockIn is built to remove all friction from building discipline — not add it.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">STEP 01</div>
+        <div class="step-title">Add your habits</div>
+        <div class="step-body">Pick 1–3 things you want to stay locked in on. Keep it focused. Research shows tracking fewer habits builds stronger routines.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">STEP 02</div>
+        <div class="step-title">Log every day</div>
+        <div class="step-body">Each morning or night, open LockIn and tap On Track or Missed for each habit. Takes under 10 seconds. No skipping allowed.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">STEP 03</div>
+        <div class="step-title">Watch the data tell the truth</div>
+        <div class="step-body">Your daily score, streak counter, and heatmap don't lie. Use them to stay honest with yourself — and push for 100% every day.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pro -->
+  <section id="pro">
+    <div class="pro-card">
+      <div>
+        <div class="pro-badge">LockIn Pro</div>
+        <div class="pro-title">Go deeper on your discipline.</div>
+        <div class="pro-sub">Pro unlocks advanced tools for people serious about getting better — streak protection, reports, templates, and more.</div>
+        <div class="pro-price">$4.99 <span>/ month</span></div>
+        <div class="pro-note">or $29.99 once — yours forever</div>
+        <a href="https://play.google.com/store/apps/details?id=com.lockin.app" class="btn-primary" style="display:inline-flex;">
+          Upgrade in app
+        </a>
+      </div>
+      <div class="pro-features">
+        <div class="pro-feature-row"><span class="pro-check">✓</span><span class="pro-feature-label">Streak freeze (once per week)</span></div>
+        <div class="pro-feature-row"><span class="pro-check">✓</span><span class="pro-feature-label">Weekly &amp; monthly reports</span></div>
+        <div class="pro-feature-row"><span class="pro-check">✓</span><span class="pro-feature-label">Habit templates (Fitness, Mindset &amp; more)</span></div>
+        <div class="pro-feature-row"><span class="pro-check">✓</span><span class="pro-feature-label">Notes history — full journal search</span></div>
+        <div class="pro-feature-row"><span class="pro-check">✓</span><span class="pro-feature-label">Advanced stats &amp; day-of-week analysis</span></div>
+        <div class="pro-feature-row"><span class="pro-check">✓</span><span class="pro-feature-label">Custom milestone celebrations</span></div>
+        <div class="pro-feature-row"><span class="pro-check">✓</span><span class="pro-feature-label">Per-habit reminders</span></div>
+        <div class="pro-feature-row"><span class="pro-check">✓</span><span class="pro-feature-label">Export data as CSV</span></div>
+        <div class="pro-feature-row"><span class="pro-check">✓</span><span class="pro-feature-label">Priority support</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <h2>Ready to lock in?</h2>
+    <p>Download LockIn free on Android. No account required, no ads, no data sold.</p>
+    <div class="hero-btns">
+      <a href="https://play.google.com/store/apps/details?id=com.lockin.app" class="btn-primary">
+        ⬇ Download for Android
+      </a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-logo">LockIn</div>
+    <div class="footer-links">
+      <a href="about/">About</a>
+      <a href="privacy/">Privacy</a>
+      <a href="mailto:mitchellmcallister89@gmail.com">Contact</a>
+    </div>
+    <div class="footer-copy">© 2026 LockIn. All rights reserved.</div>
+  </footer>
+
+</body>
+</html>
